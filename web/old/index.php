@@ -1,18 +1,34 @@
+<?php
+	define(BASE_URL,'http://belajarsedekah.com/');
+	define(APP_NAME,'Belajar Sedekah');
+
+?>
+<?php 
+    $list_menu = array(
+                    array('t' => 'Tentang', 'li' => BASE_URL."#tentang"),
+                    array('t' => 'Program', 'li' => BASE_URL."#program"),
+                    array('t' => 'Donasi', 'li' => BASE_URL."#donasi"),
+                    array('t' => 'Berita', 'li' => BASE_URL."#berita"),
+                    array('t' => 'Blog', 'li' => BASE_URL."#blog"),
+                    array('t' => 'Kontak', 'li' => BASE_URL."#kontak"),
+                );
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="SHORTCUT ICON" href="http://belajarsedekah.com/images/favicon.ico"/>
+    <link rel="SHORTCUT ICON" href="<?php echo BASE_URL."images/favicon.ico";?>"/>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name = "format-detection" content = "telephone=no">
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
-    <title>Belajar Sedekah</title>
-    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <title><?php echo APP_NAME;?></title>
+    <link rel="stylesheet" href="<?php echo BASE_URL;?>css/main.css">
 
     <!-- Cordova CSS -->
-    <link rel="stylesheet" type="text/css" href="css/master.css">
-    <script src="js/smooth.pack.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="<?php echo BASE_URL;?>css/master.css">
+    <script src="<?php echo BASE_URL;?>js/smooth.pack.js" type="text/javascript"></script>
     <script type="text/javascript">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-94271-30']);
@@ -31,19 +47,13 @@
 </a>
 <div id="header">
     <div class="wrap">
-        <a class="logo" href="http://belajarsedekah.com/#top"></a>
+        <a class="logo" href="<?php echo BASE_URL;?>#top"></a>
         <div class="menu">
-            <a href=http://belajarsedekah.com/#tentang>Tentang</a><a href=http://belajarsedekah.com/#program>Program</a><a href=http://belajarsedekah.com/#donasi>Donasi</a>
-            <a href=http://belajarsedekah.com/#berita>Berita</a><a href=http://belajarsedekah.com/#blog>Blog</a><a href=http://belajarsedekah.com/#kontak>Kontak</a>
+            <?php foreach ($list_menu as $key => $value) echo "<a href=".$value['li'].">".$value['t']."</a>"; ?>
         </div>
         <form class="menu-dropdown">
             <select onchange="location = this.options[this.selectedIndex].value;">
-                <option value=http://belajarsedekah.com/#tentang>Tentang</option>
-                <option value=http://belajarsedekah.com/#program>Program</option>
-                <option value=http://belajarsedekah.com/#donasi>Donasi</option>
-                <option value=http://belajarsedekah.com/#berita>Berita</option>
-                <option value=http://belajarsedekah.com/#blog>Blog</option>
-                <option value=http://belajarsedekah.com/#kontak>Kontak</option>
+                <?php foreach ($list_menu as $key => $value) echo "<option value=".$value['li'].">".$value['t']."</option>"; ?>
             </select>
         </form>
     </div>
@@ -72,15 +82,14 @@
 <a class="scroll-point pt-about" name="tentang"></a>
 <div class="wrap">
     <h2 class="icon icon-about">Tentang Belajar Sedekah</h2>
-    <p>Apache Cordova is a set of device APIs that allow a mobile app developer to access native device function such as the camera or accelerometer from JavaScript. Combined with a UI framework such as jQuery Mobile or Dojo Mobile or Sencha Touch, this allows a smartphone app to be developed with just HTML, CSS, and JavaScript.</p>
-    <p>Apps using Cordova are still packaged as apps using the platform SDKs, and can be made available for installation from each device's app store.</p>
-    </p>
-    <p>Some additional information may be found on our <a href="http://projects.apache.org/projects/cordova.html">Apache project page</a>.</p>
+    <p><strong>BELAJAR SEDEKAH!</strong> merupakan sebuah gerakan belajar menyisihkan sedikit dari rezeki untuk membantu adik-adik TIF UIN Suka yang membutuhkan.</p>
+	<p>Gerakan ini dimulai pada September 2014. Melalui gerakan ini, kami mengajak kawan-kawan khususnya TIF 09 UIN Suka, alumni TIF UIN Suka, dan siapapun yang ingin ikut andil didalamnya dengan mengumpulkan donasi untuk memberi dukungan kepada adik-adik yang kurang mampu namun berprestasi di bidang akademik. </p>
+
 </div>
 <a class="scroll-point" name="berita"></a>
 <hr/>
 <div class="grid">
-    <div class="wrap ">
+<div class="wrap ">
   <style type="text/css">
     ul.news {
         list-style-type: none;
@@ -113,13 +122,43 @@
     }
   </style>
   <h2>Berita <a href="/rss.xml" style="font-size:12pt; margin-left:10px">Berlangganan</a></h2>
-    <ul class="news mailing-list">
-<!-- scrip feed -->
-    </ul>
-                
-    </div>
-</div>
+  <ul class="news mailing-list">
 
+    <?php
+        $xml = simplexml_load_file("https://sejutatutorial.wordpress.com/feed/") or die("404: Tidak ada berita terbaru.");
+        //print_r($xml->channel->item);
+        $i = 0;
+        foreach ($xml->channel->item as $key) : 
+            $i++;  
+            $title = $key->title;
+            $link = $key->link;
+            $date = date('F d, Y H:i:s',strtotime($key->pubDate));
+            $desc = $key->description;
+            $cat = $key->category;
+            //$cat_nm = implode(", ", $cat); ?>
+            <li>
+                <!-- <strong><?php echo "<a href='".$link."'>".$title."</a>";?></strong>  -->
+                <strong><?php echo $title; ?></strong>
+                <p class="tgl"><?php echo $date;?></p>
+                <p class="isi"><?php echo $desc;?></p>
+              <!--   <hr class="isi"> -->
+            </li>
+            <?php if($i >= 5) break;?>
+<!--             echo "<li>";
+            echo "<p>";
+            echo "<a href='".$link."'>".$title."</a>";
+            echo "</p>";
+            echo $date;
+            echo "</br>";
+            echo $desc."<a href='".$link."'>Read more</a>";
+            echo "<hr style='margin'>";
+            echo "</li>";
+            //echo $key->title."</br>"; -->
+        <?php endforeach; ?>
+</ul>
+  
+</div>
+</div>
 <a class="scroll-point" name="contribute"></a>
 <hr/>
 
@@ -391,7 +430,7 @@
         <div class="list-container">
             <ul class="list quick-links">
                 <li class="corner"></li>
-                <li><a href="http://belajarsedekah.com/index.html#about">About Cordova<span></span></a></li>
+                <li><a href="<?php echo BASE_URL;?>index.html#about">About Cordova<span></span></a></li>
 
                 
                 <li><a href="http://projects.apache.org/projects/cordova.html">Apache Project Page<span></span></a></li>
@@ -403,7 +442,7 @@
 
             <ul class="list quick-links">
                 <li class="corner"></li>
-                <li><a href="http://belajarsedekah.com/index.html#download">Download<span></span></a></li>
+                <li><a href="<?php echo BASE_URL;?>index.html#download">Download<span></span></a></li>
                 <li><a href="http://cordova.apache.org/docs/en/5.0.0/">Documentation<span></span></a></li>
 
                 
@@ -414,7 +453,7 @@
                 <li><a href="http://wiki.apache.org/cordova/">Wiki<span></span></a></li>
                 
 
-                <li><a href="http://belajarsedekah.com/index.html#mailing-list">Mailing List<span></span></a></li>
+                <li><a href="<?php echo BASE_URL;?>index.html#mailing-list">Mailing List<span></span></a></li>
 
                 <li><a href="http://stackoverflow.com/tags/cordova">Support<span></span></a></li>
             </ul>
